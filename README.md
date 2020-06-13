@@ -34,7 +34,7 @@ sha256_read_hex(&buff, hash);
 printf("%s\n", hash);
 ```
 ## C++
-```cpp
+```c
 std::cout << SHA256::hashString("test") << std::endl;
 
 SHA256 buff;
