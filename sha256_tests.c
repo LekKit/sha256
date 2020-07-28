@@ -12,7 +12,7 @@
 #include <stdlib.h>
 
 void test_str(const char* in, const char* out) {
-    static size_t test_count = 0;
+    static int test_count = 0;
     
     char buffer[65] = {0};
     sha256_easy_hash_hex(in, strlen(in), buffer);
@@ -28,7 +28,7 @@ void test_str(const char* in, const char* out) {
 }
 
 void test_bytes(char byte, size_t size, const char* out) {
-    static size_t test_count = 0;
+    static int test_count = 0;
     
     char buffer[1024];
     struct sha256_buff buff;
@@ -47,11 +47,11 @@ void test_bytes(char byte, size_t size, const char* out) {
     buffer[64] = 0;
     
     if (strcmp(out, buffer) != 0) {
-        printf("Byte test #%i failed!!!\nsha256(0x%X * %u) = \"%s\"\nExpected value: \"%s\"\n\n", test_count, byte, size, buffer, out);
+        printf("Byte test #%i failed!!!\nsha256(0x%X * %zu) = \"%s\"\nExpected value: \"%s\"\n\n", test_count, byte, size, buffer, out);
         printf("Please report this issue to https://github.com/LekKit/sha256\n");
         exit(0);
     } else {
-        printf("Byte test #%i passed\nsha256(0x%X * %u) = \"%s\"\n\n", test_count, byte, size, buffer);
+        printf("Byte test #%i passed\nsha256(0x%X * %zu) = \"%s\"\n\n", test_count, byte, size, buffer);
     }
     
     test_count++;
