@@ -56,22 +56,23 @@ const static uint32_t k[64] = {
 static void sha256_calc_chunk(struct sha256_buff* buff, const uint8_t* chunk) {
     uint32_t w[64];
     uint32_t tv[8];
+    uint32_t i;
 
-    for (uint32_t i=0; i<16; ++i){
+    for (i=0; i<16; ++i){
         w[i] = (uint32_t) chunk[0] << 24 | (uint32_t) chunk[1] << 16 | (uint32_t) chunk[2] << 8 | (uint32_t) chunk[3];
         chunk += 4;
     }
     
-    for (uint32_t i=16; i<64; ++i){
+    for (i=16; i<64; ++i){
         uint32_t s0 = rotate_r(w[i-15], 7) ^ rotate_r(w[i-15], 18) ^ (w[i-15] >> 3);
         uint32_t s1 = rotate_r(w[i-2], 17) ^ rotate_r(w[i-2], 19) ^ (w[i-2] >> 10);
         w[i] = w[i-16] + s0 + w[i-7] + s1;
     }
     
-    for (uint32_t i = 0; i < 8; ++i)
+    for (i = 0; i < 8; ++i)
         tv[i] = buff->h[i];
     
-    for (uint32_t i=0; i<64; ++i){
+    for (i=0; i<64; ++i){
         uint32_t S1 = rotate_r(tv[4], 6) ^ rotate_r(tv[4], 11) ^ rotate_r(tv[4], 25);
         uint32_t ch = (tv[4] & tv[5]) ^ (~tv[4] & tv[6]);
         uint32_t temp1 = tv[7] + S1 + ch + k[i] + w[i];
@@ -89,7 +90,7 @@ static void sha256_calc_chunk(struct sha256_buff* buff, const uint8_t* chunk) {
         tv[0] = temp1 + temp2;
     }
 
-    for (uint32_t i = 0; i < 8; ++i)
+    for (i = 0; i < 8; ++i)
         buff->h[i] += tv[i];
 }
 
@@ -131,7 +132,8 @@ void sha256_finalize(struct sha256_buff* buff) {
 
     /* Add total size as big-endian int64 x8 */
     uint64_t size = buff->data_size * 8;
-    for (int i = 8; i > 0; --i) {
+    int i;
+    for (i = 8; i > 0; --i) {
         buff->last_chunk[55+i] = size & 255;
         size >>= 8;
     }
@@ -140,7 +142,8 @@ void sha256_finalize(struct sha256_buff* buff) {
 }
 
 void sha256_read(const struct sha256_buff* buff, uint8_t* hash) {
-    for (uint32_t i = 0; i < 8; i++) {
+    uint32_t i;
+    for (i = 0; i < 8; i++) {
         hash[i*4] = (buff->h[i] >> 24) & 255;
         hash[i*4 + 1] = (buff->h[i] >> 16) & 255;
         hash[i*4 + 2] = (buff->h[i] >> 8) & 255;
@@ -150,8 +153,8 @@ void sha256_read(const struct sha256_buff* buff, uint8_t* hash) {
 
 static void bin_to_hex(const void* data, uint32_t len, char* out) {
     static const char* const lut = "0123456789abcdef";
-
-    for (uint32_t i = 0; i < len; ++i){
+    uint32_t i;
+    for (i = 0; i < len; ++i){
         uint8_t c = ((uint8_t*)data)[i];
         out[i*2] = lut[c >> 4];
         out[i*2 + 1] = lut[c & 15];
