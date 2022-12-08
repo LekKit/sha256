@@ -40,7 +40,7 @@ void sha256_init(struct sha256_buff* buff) {
     buff->chunk_size = 0;
 }
 
-const static uint32_t k[64] = {
+static const uint32_t k[64] = {
     0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
     0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
     0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
@@ -155,7 +155,7 @@ static void bin_to_hex(const void* data, uint32_t len, char* out) {
     static const char* const lut = "0123456789abcdef";
     uint32_t i;
     for (i = 0; i < len; ++i){
-        uint8_t c = ((uint8_t*)data)[i];
+        uint8_t c = ((const uint8_t*)data)[i];
         out[i*2] = lut[c >> 4];
         out[i*2 + 1] = lut[c & 15];
     }
